@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useLocalStorage } from "@vueuse/core";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const dark = useLocalStorage("dark", false);
 
 const toggleTheme = () => {
   dark.value = !dark.value;
-  document.body.classList.toggle("dark");
 };
 
 const showMobileNav = ref(false);
@@ -14,6 +13,14 @@ const showMobileNav = ref(false);
 const toggleNav = () => {
   showMobileNav.value = !showMobileNav.value;
 };
+
+watch(
+  dark,
+  (newValue) => {
+    document.body.classList.toggle("dark", newValue);
+  },
+  { immediate: true }
+);
 </script>
 <template>
   <nav class="nav">
@@ -63,14 +70,14 @@ const toggleNav = () => {
           </button>
         </li>
         <li class="nav-list-item">About</li>
-        <li class="nav-list-item">Authenticate</li>
+        <li class="nav-list-item">Link Account</li>
       </ul>
     </div>
   </nav>
 
   <ul v-show="showMobileNav" class="mobile-nav-list">
     <li class="mobile-nav-list-item">About</li>
-    <li class="mobile-nav-list-item">Authenticate</li>
+    <li class="mobile-nav-list-item">Link Account</li>
   </ul>
 </template>
 <style scoped lang="scss">
@@ -105,5 +112,10 @@ const toggleNav = () => {
 .mobile-nav-list {
   @apply left-10 right-10 sm:left-32 sm:right-32 fixed top-14 h-32 flex justify-center items-center flex-col;
   @apply bg-white/10 backdrop-blur-sm z-20 border border-gray-300 dark:border-gray-300/10 shadow-md md:hidden dark:text-white text-sm gap-y-3;
+}
+
+.nav-list-item,
+.mobile-nav-list-item {
+  @apply cursor-pointer;
 }
 </style>
